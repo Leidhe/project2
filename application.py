@@ -10,4 +10,5 @@ socketio = SocketIO(app)
 
 @app.route("/")
 def index():
-    return "Project 2: TO"
+    return "Project 2: TODO"
+
