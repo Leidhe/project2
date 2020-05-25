@@ -26,45 +26,50 @@
 </head>
 
 <body>
-    <!--Navigation bar-->
-    <div class="container">
-        <nav>
+    <!--Main nav-->
+    <nav id="main-nav" class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="btn btn-dark" id="open" onclick="openNav()">Channels</button>
+    </nav>
 
-        </nav>
-        <nav>
-            <div id="mySidenav" class="sidenav">
+    <!--Sidebar-->
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
 
-                <h4>ROOMS</h4>
+        <div id="main-nav">
+            <div class="title">Flack</div>
+            <div id="add-channel" class="container input-group">
+                <h4 id="title">Add a new channel!</h4>
+                <input type="text" id="add-new-channel" placeholder="Add a new channel!" autocomplete="off"><br>
+                <button id="btn-add-channel" class="btn btn-dark">Add</button>
+            </div>
+
+            <div id="channels" class="container">
+                <h4 id="title">Channels</h4>
                 <ul style="list-style: none;">
                     {% for room in rooms %}
                     <li class="select-room">{{ room|title }}</li>
                     {% endfor %}
-
                 </ul>
             </div>
-        </nav>
-        <div id="main">
-            <!-- Room selection bar-->
-
-
-            <!-- Message area-->
-            <div id="right-pannel">
-                <!-- Chat area-->
-
-                <div id="display-messages-pannel">
-
-                </div>
-                <!-- Input area-->
-
-                <div id="input-message">
-                    <input type="text" id="user_message" placeholder="Type here..." autocomplete="off"><br>
-                    <button id="send_message">SEND</button>
-
-                </div>
-            </div>
-
         </div>
     </div>
+    </nav>
+    <div id="main">
+        <!-- Chat area-->
+        <div id="display-messages-pannel">
+
+        </div>
+        <!-- Input area-->
+
+        <div id="input-message"  class="input-group">
+            <input type="text" id="user_message" placeholder="Type here..." autocomplete="off"><br>
+            <button id="send_message">SEND</button>
+
+        </div>
+
+
+    </div>
+
 </body>
 
 </html>

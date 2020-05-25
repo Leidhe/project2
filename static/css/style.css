@@ -1,55 +1,184 @@
-/* The sidebar menu */
-
 .sidenav {
     height: 100%;
-    /* Full-height: remove this if you want "auto" height */
-    width: 160px;
-    /* Set the width of the sidebar */
+    /* 100% Full-height */
+    width: 0;
+    /* 0 width - change this with JavaScript */
     position: fixed;
-    /* Fixed Sidebar (stay in place on scroll) */
+    /* Stay in place */
     z-index: 1;
     /* Stay on top */
     top: 0;
     /* Stay at the top */
     left: 0;
     background-color: #111;
-    /* Black */
+    /* Black*/
     overflow-x: hidden;
     /* Disable horizontal scroll */
-    padding-top: 20px;
+    padding-top: 60px;
+    /* Place content 60px from the top */
+    transition: 0.5s;
+    /* 0.5 second transition effect to slide in the sidenav */
 }
 
-/* The navigation menu links */
-
 .sidenav ul {
-    padding: 6px 8px 6px 16px;
+    padding: 8px 8px 8px 32px;
     text-decoration: none;
     font-size: 25px;
     color: #818181;
     display: block;
+    transition: 0.3s;
 }
 
-/* When you mouse over the navigation links, change their color */
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.sidenav li {
+    margin-top: 2%;
+}
 
 .sidenav li:hover {
-    color: #f1f1f1;
+    color: grey;
 }
-
-/* Style page content */
 
 #main {
-    margin-left: 160px;
-    /* Same as the width of the sidebar */
-    padding: 0px 10px;
+    transition: margin-left .5s;
+    padding: 20px;
+    width: 80%;
+    height: 100%;
+    margin-left: 10%;
+    margin-right: 10%;
 }
 
-/* On smaller screens, where height is less than 450px, change the style of the sidebar (less padding and a smaller font size) */
+#title {
+    margin-top: 15%;
+    color: white;
+}
 
-@media screen and (max-height: 450px) {
+#channels {
+    margin-top: 5%;
+}
+
+#add-channel {
+    text-decoration: none;
+    margin-right: 7px;
+    transition: 0s;
+    min-width: 300px;
+}
+
+#add-new-channel {
+    padding: 3px;
+    font-size: 16px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 8px;
+    border-color: #291ec2;
+    box-shadow: 1px 0px 4px 0px rgba(42, 42, 42, .75);
+}
+
+#add-new-channel.focus {
+    outline: none;
+}
+
+#main-nav {
+    transition: margin-left .5s;
+}
+
+.chat {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px 0;
+    width: 50%;
+    margin-left: 2%;
+    word-break: break-all;
+}
+
+.time-right {
+    color: #aaa;
+    display: inline;
+
+}
+
+p {
+    margin: 0;
+    padding: 0;
+}
+
+#display-messages-pannel {
+    width: 100%;
+    height: 80vh;
+    overflow-y: scroll;
+    border: 3px solid #000000;
+    border-radius: 11px;
+    -moz-border-radius: 11px;
+    -webkit-border-radius: 11px;
+}
+
+#input-message {
+    padding-top: 1.5%;
+    text-decoration: none;
+    transition: 0s;
+}
+
+#user_message {
+    width: 94%;
+    padding: 7px
+}
+
+#send_message {
+    box-shadow: inset 0px 1px 0px 0px #bbdaf7;
+    background: linear-gradient(to bottom, #79bbff 5%, #378de5 100%);
+    background-color: #79bbff;
+    border-radius: 6px;
+    border: 1px solid #84bbf3;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
+    font-family: Arial;
+    font-size: 15px;
+    font-weight: bold;
+    padding: 6px 24px;
+    text-decoration: none;
+    text-shadow: 0px 1px 0px #528ecc;
+}
+
+#send_message:hover {
+    background: linear-gradient(to bottom, #378de5 5%, #79bbff 100%);
+    background-color: #378de5;
+}
+
+#send_message:active {
+    position: relative;
+    top: 1px;
+}
+
+@media (max-width: 700px) {
     .sidenav {
         padding-top: 15px;
     }
-    .sidenav ul {
+    .sidenav a {
         font-size: 18px;
+    }
+    .chat {
+        width: 95%;
+    }
+    #display-messages-pannel {
+        width: 100%;
+        height: 70vh;
+        overflow-y: scroll;
+        border: none;
+    }
+    #user_message {
+        width: 79%;
+        padding: 7px
+    }
+    #send_message {
+        padding: 7px 3px;
     }
 }

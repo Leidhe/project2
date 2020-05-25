@@ -4,12 +4,7 @@ if (!localStorage.getItem('username'))
 
 
 document.addEventListener('DOMContentLoaded', () => {
-
-    
-
     let room;
-
-
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
@@ -22,14 +17,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = localStorage.getItem('username');
         const span_user = document.createElement('span');
         const span_timestamp = document.createElement('span');
-        const p = document.createElement('p');
+        const container= document.createElement('div');
+        const msg = document.createElement('p');
         const br = document.createElement('br');
+        span_timestamp.classList.add("time-right");
+
         if (data.time_stamp) {
             span_user.innerHTML = username
             span_timestamp.innerHTML = data.time_stamp;
-            p.innerHTML = span_user.outerHTML + br.outerHTML + data.msg + br.outerHTML + span_timestamp.outerHTML;
+            msg.innerHTML = data.msg
+            container.innerHTML =  span_user.outerHTML + br.outerHTML + msg.outerHTML + span_timestamp.outerHTML;
+            container.classList.add("chat");
 
-            document.querySelector('#display-messages-pannel').append(p);
+            document.querySelector('#display-messages-pannel').append(container);
         }
         else{
             printSysMsg(data.msg)
@@ -38,6 +38,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.querySelector('#send_message').onclick = () => {
+        console.log("hola");
         socket.send({ 'msg': document.querySelector('#user_message').value, 'room': room });
 
         //Clear input area
