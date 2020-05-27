@@ -1,9 +1,17 @@
-if (!localStorage.getItem('username'))
-    localStorage.setItem('username', "Manolo");
-
-
-
+localStorage.clear();
 document.addEventListener('DOMContentLoaded', () => {
+    // Check username
+    if (!localStorage.getItem('username')){
+        $('#username_modal').modal({backdrop: 'static', keyboard: false});
+    }
+    // Set username
+    $('#username_modal').on('hide.bs.modal', function (event) {
+        var modal = $(this)
+        var username = modal.find('.modal-body input').val();
+        localStorage.setItem('username', username);
+    })
+
+
     let room;
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
