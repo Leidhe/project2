@@ -1,8 +1,7 @@
-localStorage.clear();
 document.addEventListener('DOMContentLoaded', () => {
     // Check username
-    if (!localStorage.getItem('username')){
-        $('#username_modal').modal({backdrop: 'static', keyboard: false});
+    if (!localStorage.getItem('username')) {
+        $('#username_modal').modal({ backdrop: 'static', keyboard: false });
     }
     // Set username
     $('#username_modal').on('hide.bs.modal', function (event) {
@@ -16,38 +15,43 @@ document.addEventListener('DOMContentLoaded', () => {
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-    socket.on('connect', () => {
-        socket.send("I am connected");
-
+    // When join and leave a channel
+    socket.on('join_leave', data => {
+        const username = data.username;
+        list_messages = data.list_messages;
+        if (list_messages && username == localStorage.getItem('username')) {
+            list_messages.forEach(function (element) {
+                var username = element[0];
+                var msg = element[1];
+                var time_stamp = element[2];
+                chat_message(username, msg, time_stamp);
+            });
+        }
+        printMessage(data.msg);
     });
 
     socket.on('message', data => {
-        const username = localStorage.getItem('username');
-        const span_user = document.createElement('span');
-        const span_timestamp = document.createElement('span');
-        const container= document.createElement('div');
-        const msg = document.createElement('p');
-        const br = document.createElement('br');
-        span_timestamp.classList.add("time-right");
+        username = data.username;
+        time_stamp = data.time_stamp;
+        list_messages = data.list_messages;
+        msg = data.msg;
 
-        if (data.time_stamp) {
-            span_user.innerHTML = username
-            span_timestamp.innerHTML = data.time_stamp;
-            msg.innerHTML = data.msg
-            container.innerHTML =  span_user.outerHTML + br.outerHTML + msg.outerHTML + span_timestamp.outerHTML;
-            container.classList.add("chat");
+        if (list_messages) {
+            document.getElementById('display-messages-pannel').innerHTML = "";
+            list_messages.forEach(function (element) {
+                var username = element[0];
+                var msg = element[1];
+                var time_stamp = element[2];
+                chat_message(username, msg, time_stamp);
+            });
+        }
 
-            document.querySelector('#display-messages-pannel').append(container);
-        }
-        else{
-            printSysMsg(data.msg)
-        }
+       else {chat_message(username, msg, time_stamp); }
 
     });
 
     document.querySelector('#send_message').onclick = () => {
-        console.log("hola");
-        socket.send({ 'msg': document.querySelector('#user_message').value, 'room': room });
+        socket.send({ 'msg': document.querySelector('#user_message').value, 'username': localStorage.getItem('username'), 'room': room });
 
         //Clear input area
         document.querySelector('#user_message').value = "";
@@ -58,16 +62,21 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.select-room').forEach(p => {
         p.onclick = () => {
             let newRoom = p.innerHTML;
-            if (newRoom == room) {
-                msg = "You are already in " + room + "room.";
-                printSysMsg(msg);
+            if (room) {
+                if (newRoom == room) {
+                    msg = "You are already in " + room + " room.";
+                    printMessage(msg);
+                }
+                else {
+                    leaveRoom(room);
+                    joinRoom(newRoom);
+                    room = newRoom;
+                }
             }
             else {
-                leaveRoom(room);
                 joinRoom(newRoom);
                 room = newRoom;
             }
-
         }
     });
 
@@ -86,12 +95,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     //print system message
-    function printSysMsg(msg) {
+    function printMessage(msg) {
         const p = document.createElement('p');
         p.innerHTML = msg;
         document.querySelector('#display-messages-pannel').append(p);
+    }
 
+    function chat_message(username, msg, time_stamp) {
+        const span_user = document.createElement('span');
+        const span_timestamp = document.createElement('span');
+        const container = document.createElement('div');
+        const message = document.createElement('p');
+        const br = document.createElement('br');
+        span_timestamp.classList.add("time-right");
+
+        span_user.innerHTML = username
+        span_timestamp.innerHTML = time_stamp;
+        message.innerHTML = msg;
+        container.innerHTML = span_user.outerHTML + br.outerHTML + message.outerHTML + span_timestamp.outerHTML;
+        container.classList.add("chat");
+
+        document.querySelector('#display-messages-pannel').append(container);
     }
 
 
+    function delete_message(msg) {
+        //To implement
+    }
 });
