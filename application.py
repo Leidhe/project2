@@ -36,18 +36,19 @@ def message(data):
     room = data['room']
     now = datetime.now()  # current date and time
     date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
+    remove = False
 
     # Add new message to messages
     final_msg = [username, msg, date_time]
     if len(messages_room[room]) >= limit:
         messages_room[room].pop(0)
+        remove = True
 
     messages_room[room].append(final_msg)
 
-    list_messages = messages_room[room]
 
     emit("message", {'msg': msg, 'username': username,
-                     'time_stamp': date_time ,'list_messages': list_messages}, room=room)
+                     'time_stamp': date_time ,'remove': remove}, room=room)
 
 
 @socketio.on("join")
