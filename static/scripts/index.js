@@ -10,17 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('username', username);
     })
 
-    
+
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
     // If you were on a channel before you left, you join that channel, if not a notice for you to join one
     var room = localStorage.getItem("room");
 
-    if (room){
+    if (room) {
         joinRoom(room);
     }
-    else{
+    else {
         const choose_room = document.createElement('h2');
         var chat_pannel = document.getElementById("display-messages-pannel");
 
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // When join and leave a channel
     socket.on('join_leave', data => {
         const username = data.username;
-        list_messages = data.list_messages;        
+        list_messages = data.list_messages;
         if (list_messages && username == localStorage.getItem('username')) {
             list_messages.forEach(function (element) {
                 var username = element[0];
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         msg = data.msg;
         remove = data.remove;
         //If there are more than 100 messages, the first one is deleted from the chat
-        if(remove){
+        if (remove) {
             var element = document.getElementById("display-messages-pannel");
             element.removeChild(element.firstChild);
         }
@@ -97,6 +97,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function leaveRoom(room) {
         const username = localStorage.getItem('username');
         socket.emit('leave', { 'username': username, 'room': room });
+
+        //Clear chat pannel
+        document.querySelector('#display-messages-pannel').innerHTML = "";
     }
     //Join channel
     function joinRoom(room) {
@@ -124,14 +127,28 @@ document.addEventListener('DOMContentLoaded', () => {
         span_user.innerHTML = username
         span_timestamp.innerHTML = time_stamp;
         message.innerHTML = msg;
-        container.innerHTML = span_user.outerHTML + br.outerHTML + message.outerHTML + span_timestamp.outerHTML;
+
+        //To remove own messages only
+
+        if (username == localStorage.getItem("username")) {
+            delete_button = document.createElement("button");
+            delete_button.classList.add("delete_button");
+            delete_button.type = "button";
+            delete_button.setAttribute('onClick', 'delete_message()');
+            delete_button.innerHTML = "Remove";
+            container.innerHTML = span_user.outerHTML + br.outerHTML + message.outerHTML + span_timestamp.outerHTML + delete_button.outerHTML;
+        }
+
+
+        else { container.innerHTML = span_user.outerHTML + br.outerHTML + message.outerHTML + span_timestamp.outerHTML; }
         container.classList.add("chat");
 
         document.querySelector('#display-messages-pannel').append(container);
     }
 
 
-    function delete_message(msg) {
-        //To implement
-    }
+
 });
+function delete_message(msg) {
+    console.log("FUNCAAAAA");
+}
