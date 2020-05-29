@@ -97,12 +97,15 @@
     width: 50%;
     margin-left: 2%;
     word-break: break-all;
+    animation-name: remove;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-play-state: paused;
 }
 
 .time-right {
     color: #aaa;
     display: inline;
-
 }
 
 p {
@@ -158,8 +161,43 @@ p {
     top: 1px;
 }
 
-.delete_button{
+.delete_button {
     float: right;
+}
+
+@keyframes remove {
+    0% {
+        opacity: 1;
+        border: 2px solid #dedede;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        padding: 10px;
+        margin: 10px 0;
+        width: 50%;
+        line-height: 100%;
+      }
+    75%{
+        opacity:0;
+        border: 2px solid #dedede;
+        background-color: #f1f1f1;
+        border-radius: 10px;
+        line-height: 100%;
+        overflow: hidden;
+
+    }
+    95%{width: 50%;        
+    }
+    100%{
+        opacity: 0;
+        border: 0;
+        height: 0px;
+        border-radius: 0px;
+        padding: 0;
+        line-height: 0px;
+        width: 0px;        
+
+        
+    }
 }
 
 @media (max-width: 700px) {

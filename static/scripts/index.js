@@ -63,6 +63,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     });
 
+    socket.on('delete_message', data => {
+        username = data.username;
+        time_stamp = data.time_stamp;
+        msg = data.msg;
+        var chats = document.getElementsByClassName("chat")
+        console.log(chats);
+        for(i = 0;i < chats.length; i++){
+
+            var childs = chats[i].children;
+            var username1 = childs[0].innerHTML;
+            var message1 = childs[2].innerHTML;
+            var time_stamp1 = childs[3].innerHTML;
+
+            console.log(username1,message1,time_stamp1);
+            console.log(username,msg,time_stamp);
+            console.log(username == username1);
+            console.log(message1 == msg);
+            console.log(time_stamp1 == time_stamp);
+
+
+            if (username1 == username && time_stamp1 == time_stamp && message1 == msg) {
+                chats[i].remove();
+            }
+        }
+    });
+
+
     //To send a message
     document.querySelector('#send_message').onclick = () => {
         socket.send({ 'msg': document.querySelector('#user_message').value, 'username': localStorage.getItem('username'), 'room': room });
@@ -134,7 +161,6 @@ document.addEventListener('DOMContentLoaded', () => {
             delete_button = document.createElement("button");
             delete_button.classList.add("delete_button");
             delete_button.type = "button";
-            delete_button.setAttribute('onClick', 'delete_message()');
             delete_button.innerHTML = "Remove";
             container.innerHTML = span_user.outerHTML + br.outerHTML + message.outerHTML + span_timestamp.outerHTML + delete_button.outerHTML;
         }
@@ -146,9 +172,33 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelector('#display-messages-pannel').append(container);
     }
 
+    function delete_message(username, message, time_stamp) {
+        var room = localStorage.getItem("room");
+        socket.emit('delete_one_message', { 'username': username, 'message': message, 'time_stamp': time_stamp, 'room': room });
+    }
 
+    document.addEventListener('click', event => {
+        const element = event.target;
+        if (element.className === 'delete_button') {
+            var div = element.parentElement;
+            var childs = div.children;
+            var username = childs[0].innerHTML;
+            var message = childs[2].innerHTML;
+            var time_stamp = childs[3].innerHTML;
 
+            console.log(username);
+            console.log(message);
+
+            console.log(time_stamp);
+
+            delete_message(username, message, time_stamp);
+            element.parentElement.style.animationPlayState = 'running';
+            element.parentElement.addEventListener('animationend', () => {
+                element.parentElement.remove();
+            });
+        }
+    });
 });
-function delete_message(msg) {
-    console.log("FUNCAAAAA");
-}
+
+
+

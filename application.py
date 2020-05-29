@@ -51,6 +51,24 @@ def message(data):
                      'time_stamp': date_time ,'remove': remove}, room=room)
 
 
+@socketio.on("delete_one_message")
+def delete_one_message(data):
+    room = data['room']
+    username = data['username']
+    message = data['message']
+    time_stamp = data['time_stamp']
+
+    #delete message of the room
+    delete_message = [username, message, time_stamp]
+    print(delete_message)
+    list_messages_room = messages_room[room]
+    list_messages_room.remove(delete_message)
+
+    #save the resulting list in the dictionary 
+    messages_room[room]= list_messages_room
+
+    emit("delete_message", {'username': username, 'msg': message, 'time_stamp': time_stamp}, room=room)
+
 @socketio.on("join")
 def join(data):
     username = data['username']
