@@ -12,6 +12,7 @@ socketio = SocketIO(app)
 
 # List of the channels
 rooms = ["lounge", "news", "test_100"]
+
 # Messages is a dict with a pattern like {"channel": [["user", "message", "timestamp"]]}
 messages_room = defaultdict(list)
 
@@ -60,7 +61,6 @@ def delete_one_message(data):
 
     #delete message of the room
     delete_message = [username, message, time_stamp]
-    print(delete_message)
     list_messages_room = messages_room[room]
     list_messages_room.remove(delete_message)
 
@@ -69,11 +69,23 @@ def delete_one_message(data):
 
     emit("delete_message", {'username': username, 'msg': message, 'time_stamp': time_stamp}, room=room)
 
+
+@socketio.on("new_channel")
+def new_channel(data):
+    error = False
+    channel = data['channel']
+    if channel in rooms:
+        error = True
+        emit('add_a_channel', {'error': error})
+    else:
+        rooms.append(channel)
+        emit('add_a_channel', {'channel': channel}, broadcast = True)
+    
+    
 @socketio.on("join")
 def join(data):
     username = data['username']
     room = data['room']
-    print(room)
     join_room(room)
     list_messages = messages_room[room]
     emit("join_leave", {'msg': username +
