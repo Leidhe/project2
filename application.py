@@ -64,7 +64,9 @@ def delete_one_message(data):
 
     #delete message of the room
     delete_message = [username, message, time_stamp]
+    print(delete_message)
     list_messages_room = messages_room[room]
+    print(list_messages_room)
     list_messages_room.remove(delete_message)
 
     #save the resulting list in the dictionary 

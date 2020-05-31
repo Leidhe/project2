@@ -221,6 +221,8 @@ document.addEventListener('DOMContentLoaded', () => {
         else { container.innerHTML = span_user.outerHTML + br.outerHTML + message.outerHTML + span_timestamp.outerHTML; }
 
         document.querySelector('#display-messages-pannel').append(container);
+        var element = document.getElementById("display-messages-pannel");
+        element.scrollTop = element.scrollHeight;
     }
     //Call the server to delete the message
     function delete_message(username, message, time_stamp) {
@@ -234,9 +236,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (element.className === 'delete_button fa-trash-o fa-lg') {
             var div = element.parentElement;
             var childs = div.children;
-            var username = childs[0].innerHTML;
-            var message = childs[2].innerHTML;
-            var time_stamp = childs[3].innerHTML;
+            var username = childs[1].innerHTML;
+            var message = childs[3].innerHTML;
+            var time_stamp = childs[4].innerHTML;
+            console.log(username, message, time_stamp);
 
             delete_message(username, message, time_stamp);
             element.parentElement.style.animationPlayState = 'running';
