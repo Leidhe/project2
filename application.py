@@ -10,8 +10,11 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
-# List of the channels
+# List of channels
 rooms = ["lounge", "news", "test_100"]
+
+## List of users
+users = []
 
 # Messages is a dict with a pattern like {"channel": [["user", "message", "timestamp"]]}
 messages_room = defaultdict(list)
@@ -81,6 +84,15 @@ def new_channel(data):
         rooms.append(channel)
         emit('add_a_channel', {'channel': channel}, broadcast = True)
     
+@socketio.on("check_username")
+def check_username(data):
+    username = data['username']
+    if username in users:
+        emit('check_user_wrong', {'username':username, 'error': True})
+    else:
+        users.append(username)
+        emit('check_user_wrong', {'username':username, 'error': False})
+
     
 @socketio.on("join")
 def join(data):

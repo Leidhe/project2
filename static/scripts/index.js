@@ -1,32 +1,35 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Check username
-    if (!localStorage.getItem('username')) {
-        $('#username_modal').modal({ backdrop: 'static', keyboard: false });
-    }
-    // Set username
-    $('#username_modal').on('hide.bs.modal', function (event) {
-        var modal = $(this)
-        var username = modal.find('.modal-body input').val();
-        localStorage.setItem('username', username);
-    })
-
-
     // Connect to websocket
     var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-    // If you were on a channel before you left, you join that channel, if not a notice for you to join one
+    socket.on('connect', () => {
+        // Check username
+        if (!localStorage.getItem('username')) {
+            $('#username_modal').modal({ backdrop: 'static', keyboard: false });
+        }
+        // Set username
+        $('#username_modal').on('hidden.bs.modal', function (event) {
+            var modal = $(this);
+            var username = modal.find('.modal-body input').val();
+            check_username(username);
+        });
+
+
+        var room = localStorage.getItem("room");
+         // If you were on a channel before you left, you join that channel, if not a notice for you to join one
+        if (room) {
+            joinRoom(room);
+        }
+        else {
+            const choose_room = document.createElement('h2');
+            var chat_pannel = document.getElementById("display-messages-pannel");
+            choose_room.classList = "join_leave";
+            choose_room.innerHTML = "Please choose a channel or create a new one"
+            chat_pannel.append(choose_room);
+        }
+    });
+
     var room = localStorage.getItem("room");
-
-    if (room) {
-        joinRoom(room);
-    }
-    else {
-        const choose_room = document.createElement('h2');
-        var chat_pannel = document.getElementById("display-messages-pannel");
-
-        choose_room.innerHTML = "Please choose a channel or create a new one"
-        chat_pannel.append(choose_room);
-    }
 
     // When join and leave a channel
     socket.on('join_leave', data => {
@@ -90,8 +93,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     socket.on('add_a_channel', data => {
-        var channel = data.channel
-        var error = data.error
+        var channel = data.channel;
+        var error = data.error;
 
         if (error) {
             alert("Channel exists");
@@ -105,7 +108,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    socket.on('check_user_wrong', data => {
+        var username = data.username;
+        var error = data.error;
+        if(error){
+            alert("Username already exists")
+            $('#username_modal').modal({ backdrop: 'static', keyboard: false });
+        }
 
+        else{
+            localStorage.setItem('username', username);
+        }
+    });
 
     //To send a message
     document.querySelector('#send_message').onclick = () => {
@@ -138,13 +152,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
     //Add a channel
     document.querySelector('#btn-add-channel').onclick = () => {
         var new_channel = document.querySelector('#add-new-channel').value;
         socket.emit('new_channel', { 'channel': new_channel });
         //Clear input
         document.querySelector('#add-new-channel').value = "";
+    }
+
+    //Check if the username exists on server
+    function check_username(username){
+        socket.emit('check_username', { 'username': username });
 
     }
 
@@ -156,8 +174,10 @@ document.addEventListener('DOMContentLoaded', () => {
         //Clear chat pannel
         document.querySelector('#display-messages-pannel').innerHTML = "";
     }
+
     //Join channel
     function joinRoom(room) {
+        document.querySelector('#display-messages-pannel').innerHTML = "";
         const username = localStorage.getItem('username');
         localStorage.setItem("room", room);
         socket.emit('join', { 'username': username, 'room': room });
@@ -166,6 +186,7 @@ document.addEventListener('DOMContentLoaded', () => {
     //When someone joins the channel
     function printMessage(msg) {
         const p = document.createElement('p');
+        p.classList.add("join_leave");
         p.innerHTML = msg;
         document.querySelector('#display-messages-pannel').append(p);
     }
@@ -183,18 +204,21 @@ document.addEventListener('DOMContentLoaded', () => {
         span_timestamp.innerHTML = time_stamp;
         message.innerHTML = msg;
 
+        container.classList = "chat";
+
         //To remove own messages only
 
         if (username == localStorage.getItem("username")) {
-            delete_button = document.createElement("button");
-            delete_button.classList.add("delete_button");
-            delete_button.type = "button";
-            delete_button.innerHTML = "Remove";
-            container.innerHTML = span_user.outerHTML + br.outerHTML + message.outerHTML + span_timestamp.outerHTML + delete_button.outerHTML;
+            delete_icon = document.createElement("i");
+            delete_icon.classList.add("delete_button");
+            delete_icon.classList.add("fa-trash-o");
+            delete_icon.classList.add("fa-lg");
+
+            container.innerHTML = delete_icon.outerHTML + span_user.outerHTML + br.outerHTML + message.outerHTML + span_timestamp.outerHTML;
+            container.classList = "chat_own";
         }
 
         else { container.innerHTML = span_user.outerHTML + br.outerHTML + message.outerHTML + span_timestamp.outerHTML; }
-        container.classList.add("chat");
 
         document.querySelector('#display-messages-pannel').append(container);
     }
@@ -204,10 +228,10 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.emit('delete_one_message', { 'username': username, 'message': message, 'time_stamp': time_stamp, 'room': room });
     }
 
-    //When anyone press a delete_button for delete a message
+    //When anyone press a delete_icon for delete a message
     document.addEventListener('click', event => {
         const element = event.target;
-        if (element.className === 'delete_button') {
+        if (element.className === 'delete_button fa-trash-o fa-lg') {
             var div = element.parentElement;
             var childs = div.children;
             var username = childs[0].innerHTML;
@@ -222,6 +246,3 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
-
-
-

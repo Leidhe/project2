@@ -1,13 +1,43 @@
 document.addEventListener('DOMContentLoaded', () => {
     //Make enter key submit
 
-    let msg = document.querySelector("#user_message");
+    let msg = document.querySelector("#add-new-channel");
     msg.addEventListener('keyup', event => {
+        event.preventDefault();
+        if (event.keyCode === 13) {
+            document.querySelector("#btn-add-channel").click();
+        }
+    });
+
+    let channel = document.querySelector("#user_message");
+    channel.addEventListener('keyup', event => {
         event.preventDefault();
         if (event.keyCode === 13) {
             document.querySelector("#send_message").click();
         }
-    })
+    });
+
+    // By default, send_message button is disabled
+    document.querySelector('#send_message').disabled = true;
+
+    // Enable button only if there is text in the input field
+    document.querySelector('#user_message').onkeyup = () => {
+        if (document.querySelector('#user_message').value.length > 0)
+            document.querySelector('#send_message').disabled = false;
+        else
+            document.querySelector('#send_message').disabled = true;
+    };
+
+    // By default, create_channel button is disabled
+    document.querySelector('#btn-add-channel').disabled = true;
+
+    // Enable button only if there is text in the input field
+    document.querySelector('#add-new-channel').onkeyup = () => {
+        if (document.querySelector('#add-new-channel').value.length > 0)
+            document.querySelector('#btn-add-channel').disabled = false;
+        else
+            document.querySelector('#btn-add-channel').disabled = true;
+    };
 
 });
 
@@ -19,7 +49,6 @@ function openNav() {
 
 }
 
-/* Set the width of the side navigation to 0 and the left margin of the page content to 0 */
 function closeNav() {
     document.getElementById("mySidenav").style.width = "0";
     document.getElementById("main").style.marginLeft = "10%";
@@ -27,4 +56,3 @@ function closeNav() {
 
 }
 
-/* Set the width of the side navigation to 0 and the left margin of the page content to 0 */

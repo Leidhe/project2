@@ -1,23 +1,14 @@
 .sidenav {
     height: 100%;
-    /* 100% Full-height */
     width: 0;
-    /* 0 width - change this with JavaScript */
     position: fixed;
-    /* Stay in place */
     z-index: 1;
-    /* Stay on top */
     top: 0;
-    /* Stay at the top */
     left: 0;
     background-color: #111;
-    /* Black*/
     overflow-x: hidden;
-    /* Disable horizontal scroll */
     padding-top: 60px;
-    /* Place content 60px from the top */
     transition: 0.5s;
-    /* 0.5 second transition effect to slide in the sidenav */
 }
 
 .sidenav ul {
@@ -42,7 +33,7 @@
 }
 
 .sidenav li:hover {
-    color: grey;
+    color: honeydew;
 }
 
 #main {
@@ -56,6 +47,11 @@
 
 #title {
     margin-top: 15%;
+    color: white;
+}
+
+#main_title {
+    margin-left: 5%;
     color: white;
 }
 
@@ -97,14 +93,30 @@
     width: 50%;
     margin-left: 2%;
     word-break: break-all;
+}
+
+.chat_own {
+    border: 2px solid lightskyblue;
+    background-color: lightblue;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    margin-left: 48%;
+    width: 50%;
+    word-break: break-all;
+    overflow: auto;
     animation-name: remove;
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
     animation-play-state: paused;
 }
 
+.chat_own:hover .delete_button {
+    display: block;
+}
+
 .time-right {
-    color: #aaa;
+    color: rgb(98, 98, 98);
     display: inline;
 }
 
@@ -130,7 +142,6 @@ p {
 }
 
 #user_message {
-    width: 94%;
     padding: 7px
 }
 
@@ -161,42 +172,78 @@ p {
     top: 1px;
 }
 
+#send_message:disabled {
+    position: relative;
+    top: 1px;
+    background: grey;
+    background-color: grey;
+    box-shadow: inset 0px 1px 0px 0px grey;
+    border: 1px solid grey;
+
+}
+
+.flexbox {
+    display: flex;
+}
+
+.flexbox .stretch {
+    flex: 1;
+}
+
+.flexbox .normal {
+    flex: 0;
+    margin: 0 0 0 1rem;
+}
+
+.flexbox div input {
+    padding: .5em 1em;
+    width: 100%;
+}
+
+.flexbox div button {
+    padding: .5em 1em;
+    white-space: nowrap;
+}
+
+.join_leave {
+    color: maroon;
+    font-weight: bold;
+    text-align: center;
+}
+
 .delete_button {
     float: right;
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    display: none;
 }
 
 @keyframes remove {
     0% {
         opacity: 1;
+        word-break: break-all;
+        line-height: 150%;
+    }
+    75% {
+        opacity: 0;
         border: 2px solid #dedede;
-        background-color: #f1f1f1;
-        border-radius: 10px;
-        padding: 10px;
-        margin: 10px 0;
-        width: 50%;
-        line-height: 100%;
-      }
-    75%{
-        opacity:0;
-        border: 2px solid #dedede;
-        background-color: #f1f1f1;
         border-radius: 10px;
         line-height: 100%;
         overflow: hidden;
-
     }
-    95%{width: 50%;        
+    95% {
+        width: 50%;
     }
-    100%{
+    100% {
         opacity: 0;
         border: 0;
         height: 0px;
         border-radius: 0px;
         padding: 0;
         line-height: 0px;
-        width: 0px;        
-
-        
+        width: 0px;
     }
 }
 
@@ -210,16 +257,18 @@ p {
     .chat {
         width: 95%;
     }
+    .chat_own {
+        width: 95%;
+        margin-left: 2%;
+
+    }
     #display-messages-pannel {
         width: 100%;
         height: 70vh;
         overflow-y: scroll;
         border: none;
     }
-    #user_message {
-        width: 79%;
-        padding: 7px
-    }
+
     #send_message {
         padding: 7px 3px;
     }
