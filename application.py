@@ -11,7 +11,7 @@ app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)
 
 # List of channels
-rooms = ["lounge", "news", "test_100"]
+rooms = ["test_100"]
 
 ## List of users
 users = []
@@ -22,6 +22,7 @@ messages_room = defaultdict(list)
 # limit of messages allowed
 limit = 100
 
+# only for test the limit of 100 messages
 for x in range(100):
     now = datetime.now()  # current date and time
     date_time = now.strftime("%m/%d/%Y, %H:%M:%S")
